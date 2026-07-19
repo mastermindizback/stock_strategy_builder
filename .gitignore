@@ -1,0 +1,32 @@
+# Ignore .DS_Store files
+.DS_Store
+# Ignore Python bytecode files
+__pycache__/
+*.py[cod]
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints
+# Ignore environment variables
+.env
+# Ignore local configuration files
+*.local
+# Ignore log files
+*.log
+# Ignore temporary files
+*.tmp
+# Ignore compiled Python files
+*.so
+*.pyd
+# Ignore venv directories
+venv/
+# Ignore Streamlit session files
+.sse/
+# Ignore lock files
+*.lock
+# Ignore .agents dir
+.agents/
+# Ignore .venv dir
+.venv/
+# Ignore .toml files
+*.toml
+# Ignore .python-version files
+.python-version

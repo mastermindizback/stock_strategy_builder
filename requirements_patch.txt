@@ -1,0 +1,5 @@
+# Pin to avoid known pyarrow mimalloc SIGSEGV (arrow issue #50471)
+pyarrow<25.0.0
+streamlit>=1.59.2
+watchdog>=4.0.0
+nselib>=2.5.1
