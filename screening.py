@@ -136,12 +136,15 @@ def run_risk_screen(
         fundamentals["Ticker"].astype(str).str.replace(".NS", "", regex=False).str.upper().dropna().unique().tolist()
     )
 
-    note(f"Downloading TTM daily prices for {len(symbols)} shortlisted stocks via nselib …")
-    stock_prices = fetch_stock_prices(symbols, start=start_date, end=end_date)
+    note(f"Downloading TTM daily prices for {len(symbols)} shortlisted stocks via yfinance …")
+    stock_prices, missing_symbols = fetch_stock_prices(symbols, start=start_date, end=end_date)
+
+    if missing_symbols:
+      note(f"⚠️ No yfinance price data for {len(missing_symbols)} symbol(s): {', '.join(missing_symbols)}")
 
     if adjust_for_splits and not stock_prices.empty:
-        note("Applying split/bonus adjustment to raw prices …")
-        stock_prices = build_adjusted_price_frame(stock_prices, start=start_date, end=end_date)
+      note("Applying split/bonus adjustment to raw prices …")
+      stock_prices = build_adjusted_price_frame(stock_prices, start=start_date, end=end_date)
 
     note(f"Downloading benchmark prices for {benchmark_index_name} …")
     benchmark_prices = fetch_benchmark_prices(benchmark_index_name, start=start_date, end=end_date)
