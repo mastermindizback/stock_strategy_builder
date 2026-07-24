@@ -19,10 +19,10 @@ SCREEN_CRITERIA = {
 def build_screener_query() -> str:
     c = SCREEN_CRITERIA
     return (
-        f"Sales growth > {c['sales_growth_min']} AND "
-        f"Profit growth > {c['profit_growth_min']} AND "
-        f"PEG Ratio < {c['peg_ratio_max']} AND "
-        f"Promoter holding > {c['promoter_holding_min']}"
+        f"Sales growth >= {c['sales_growth_min']} AND "
+        f"Profit growth >= {c['profit_growth_min']} AND "
+        f"PEG Ratio <= {c['peg_ratio_max']} AND "
+        f"Promoter holding >= {c['promoter_holding_min']}"
     )
 
 

@@ -78,7 +78,7 @@ def compute_risk_metrics(
             beta = cov / bench_var
         std_dev_annual_pct = col.std() * np.sqrt(252) * 100 if len(col) > 1 else np.nan
 
-        active_returns = col - common
+        active_returns = col - (beta * common)
         active_risk_annual_pct = (
             active_returns.std() * np.sqrt(252) * 100 if len(active_returns) > 1 else np.nan
         )

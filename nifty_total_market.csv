@@ -45,7 +45,6 @@ Alembic Pharmaceuticals Ltd.,Healthcare,APLLTD,EQ,INE901L01018
 Alivus Life Sciences Ltd.,Healthcare,ALIVUS,EQ,INE03Q201024
 Alkem Laboratories Ltd.,Healthcare,ALKEM,EQ,INE540L01014
 Alkyl Amines Chemicals Ltd.,Chemicals,ALKYLAMINE,EQ,INE150B01039
-Allcargo Global Ltd.,Services,AGL,EQ,INE1YPB01014
 Allied Blenders and Distillers Ltd.,Fast Moving Consumer Goods,ABDL,EQ,INE552Z01027
 Alok Industries Ltd.,Textiles,ALOKINDS,EQ,INE270A01029
 Amara Raja Energy & Mobility Ltd.,Automobile and Auto Components,ARE&M,EQ,INE885A01032
@@ -202,6 +201,7 @@ Dixon Technologies (India) Ltd.,Consumer Durables,DIXON,EQ,INE935N01020
 Dr. Agarwal's Health Care Ltd.,Healthcare,AGARWALEYE,EQ,INE943P01029
 Dr. Lal Path Labs Ltd.,Healthcare,LALPATHLAB,EQ,INE600L01024
 Dr. Reddy's Laboratories Ltd.,Healthcare,DRREDDY,EQ,INE089A01031
+Dummy Triveni Ltd.,Capital Goods,DUMMYTRVN,EQ,DUM256C01024
 Dynamatic Technologies Ltd.,Capital Goods,DYNAMATECH,EQ,INE221B01012
 E.I.D. Parry (India) Ltd.,Fast Moving Consumer Goods,EIDPARRY,EQ,INE126A01031
 EIH Ltd.,Consumer Services,EIHOTEL,EQ,INE230A01023
@@ -695,7 +695,7 @@ Transrail Lighting Ltd.,Capital Goods,TRANSRAILL,EQ,INE454P01035
 Travel Food Services Ltd.,Consumer Services,TRAVELFOOD,EQ,INE103V01028
 Trent Ltd.,Consumer Services,TRENT,EQ,INE849A01020
 Trident Ltd.,Textiles,TRIDENT,EQ,INE064C01022
-Triveni Engineering & Industries Ltd.,Fast Moving Consumer Goods,TRIVENI,EQ,INE256C01024
+Triveni Engineering & Industries Ltd.,Fast Moving Consumer Goods,TRIVENI,BE,INE256C01024
 Triveni Turbine Ltd.,Capital Goods,TRITURBINE,EQ,INE152M01016
 Tube Investments of India Ltd.,Automobile and Auto Components,TIINDIA,EQ,INE974X01010
 UCO Bank,Financial Services,UCOBANK,EQ,INE691A01018
