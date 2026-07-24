@@ -80,7 +80,7 @@ with st.sidebar:
     benchmark_label = st.selectbox(
         "Benchmark index",
         options=list(config.AVAILABLE_BENCHMARKS.keys()),
-        index=list(config.AVAILABLE_BENCHMARKS.keys()).index("NIFTY TOTAL MARKET"),
+        index=0,
         help="Beta is computed relative to whichever benchmark you pick here.",
     )
     adjust_splits = st.checkbox(
@@ -190,7 +190,7 @@ if step2_btn and st.session_state.fundamentals_result is not None:
         start_date = (datetime.date.today() - datetime.timedelta(days=400)).isoformat()
         with st.spinner(f"Fetching prices vs {benchmark_label} and computing Beta / Std Dev / Momentum via nselib..."):
             try:
-                final_df, bench_stats = run_risk_screen(
+                final_df, bench_stats, missing_syms = run_risk_screen(
                     in_universe_df, start_date, end_date,
                     beta_max=beta_max_input,
                     active_risk_max_pct=active_risk_max_input,
@@ -201,6 +201,12 @@ if step2_btn and st.session_state.fundamentals_result is not None:
                 st.session_state.final = final_df
                 st.session_state.benchmark_stats = bench_stats
                 st.session_state.ranked = None
+                st.session_state.missing_symbols = missing_syms
+                if st.session_state.get("missing_symbols"):
+                    st.warning(
+                        f"No price data found on Yahoo Finance for: {', '.join(st.session_state.missing_symbols)}. "
+                        "These stocks are excluded from Beta/StdDev/Momentum but were still fundamentally screened."
+                    )
             except Exception as exc:
                 st.error(f"Risk screen failed: {exc}")
                 st.stop()

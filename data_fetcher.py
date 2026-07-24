@@ -321,7 +321,7 @@ def _parse_results_table(html: str) -> pd.DataFrame:
 _NON_NUMERIC = {"Name", "Ticker", "Sector", "company_url", "company_id", "symbol", "ISIN"}
 _FORCE_NUMERIC = {
     "P/E", "ROE", "ROCE", "Sales Growth", "Debt to Equity", "Piotroski score",
-    "Market Cap", "ROCE %", "Div Yld %", "Promoter Holding"
+    "Market Cap", "ROCE %", "Div Yld %", "Promoter Holding", "Chg in FII Hold", "Chg in DII Hold", "Profit Growth"
 }
 
 
@@ -457,7 +457,13 @@ EXPECTED_COLUMNS: dict[str, list[str]] = {
         "prom hold %",
         "prom. holding",
         "promoterholding"
-    ]
+    ],
+    "Chg in FII Hold": [
+        "Chg in FII Hold %", "Change in FII Holding", "chg in fii holding",
+    ],
+    "Chg in DII Hold": [
+        "Chg in DII Hold %", "Change in DII Holding", "chg in dii holding",
+    ],
 }
 
 

@@ -40,6 +40,8 @@ DEFAULT_DIRECTION = {
     "StdDev_%": False,        # lower volatility is better (used for RANKING, e.g. Low Vol style)
     "Active_Risk_%": False,   # lower tracking error vs benchmark is better (used for CAPPING, not ranking)
     "Momentum_%": True,
+    "Chg in FII Hold": True,   # rising FII stake is bullish
+    "Chg in DII Hold": True,   # rising DII stake is bullish
 }
 
 
@@ -167,7 +169,9 @@ STYLE_FACTOR_WEIGHTS: dict[str, dict[str, tuple[float, bool]]] = {
     },
     # Fama-French/Carhart UMD momentum: trailing 12-1 month price return.
     "Momentum": {
-        "Momentum_%": (1.0, True),
+        "Momentum_%": (0.40, True),        # trailing 12-1 month price momentum (core UMD factor)
+        "Chg in FII Hold": (0.30, True),   # institutional (FII) accumulation
+        "Chg in DII Hold": (0.30, True),   # institutional (DII) accumulation
     },
 }
 
@@ -176,7 +180,8 @@ STYLE_DESCRIPTIONS: dict[str, str] = {
     "Quality": "Favors high ROE/ROCE, strong Piotroski score, low leverage, and high promoter holding.",
     "Growth": "Favors stocks with the strongest annual sales growth and profit growth, with a profitability kicker from ROE.",
     "Value": "Favors cheaper stocks on a P/E basis (Fama-French HML-style value tilt).",
-    "Momentum": "Favors stocks with the strongest trailing 12-1 month price momentum (Carhart UMD-style).",
+    "Momentum": "Favors stocks with strong trailing 12-1 month price momentum (70% weight), "
+    "plus rising FII and DII shareholding (15% each) as a smart-money confirmation signal.",
 }
 
 
