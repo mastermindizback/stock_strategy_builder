@@ -177,6 +177,6 @@ def run_risk_screen(
         "Sales Growth", "Profit Growth", "Debt to Equity", "Piotroski score", "Promoter Holding",
         "Beta", "StdDev_%", "Active_Risk_%", "Momentum_%"
     ] if c in final.columns]
-    return final[cols].sort_values("Beta").reset_index(drop=True), benchmark_stats
+    return final[cols].sort_values("Beta").reset_index(drop=True), benchmark_stats, missing_symbols
 
 # artifact refresh: 1784455641.5617282
