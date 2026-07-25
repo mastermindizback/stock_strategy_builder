@@ -98,6 +98,8 @@ SCREENER_COLUMNS = [
     "MarketCap",
     "Roce",
     "PromoterHolding",
+    "Change in FII holding", 
+    "Change in DII holding",
 ]
 
 
