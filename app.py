@@ -257,22 +257,19 @@ if st.session_state.final is not None:
                 st.bar_chart(result.set_index("Name")["StdDev_%"])
 
         st.divider()
-        st.header("Step 3 - Rank by Quant Style")
-        style_choice = st.selectbox(
-            "Pick a ranking style",
-            options=["Low Vol", "Quality", "Growth", "Value", "Momentum"],
-        )
+        st.header("Step 3 - Rank Your Shortlist")
+        style_choice = st.selectbox("Pick a ranking strategy", options=["Low Vol", "Quality", "Growth", "Value", "Momentum"])
         st.caption(STYLE_DESCRIPTIONS.get(style_choice, ""))
-        sector_neutral_rank = st.checkbox(
-            "Rank sector-neutral (z-score within each sector)",
-            value=True,
-            disabled="Sector" not in result.columns,
+        
+        top_n = st.number_input(
+            "How many stocks do you want in your final list?",
+            min_value=1, max_value=len(result), value=min(20, len(result)), step=1,
+            help="Only your top-ranked stocks by this many will be shown/downloaded.",
         )
 
         if st.button("Compute style rank", width="stretch"):
-            st.session_state.ranked = compute_style_rank(
-                result, style_choice, sector_neutral=sector_neutral_rank
-            )
+            ranked = compute_style_rank(result, style_choice)
+            st.session_state.ranked = ranked.head(int(top_n))
 
 if st.session_state.ranked is not None:
     ranked = st.session_state.ranked
