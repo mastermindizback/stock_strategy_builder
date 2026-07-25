@@ -176,12 +176,30 @@ STYLE_FACTOR_WEIGHTS: dict[str, dict[str, tuple[float, bool]]] = {
 }
 
 STYLE_DESCRIPTIONS: dict[str, str] = {
-    "Low Vol": "Favors stocks with lower annualised volatility and lower Beta (defensive/low-vol anomaly).",
-    "Quality": "Favors high ROE/ROCE, strong Piotroski score, low leverage, and high promoter holding.",
-    "Growth": "Favors stocks with the strongest annual sales growth and profit growth, with a profitability kicker from ROE.",
-    "Value": "Favors cheaper stocks on a P/E basis (Fama-French HML-style value tilt).",
-    "Momentum": "Favors stocks with strong trailing 12-1 month price momentum (70% weight), "
-    "plus rising FII and DII shareholding (15% each) as a smart-money confirmation signal.",
+    "Low Vol": (
+        "Steady, less jumpy stocks. Picks companies whose share price moves "
+        "around less and swings less violently than the market — good if you "
+        "want fewer sleepless nights."
+    ),
+    "Quality": (
+        "Well-run, financially sound businesses. Picks companies with strong "
+        "profitability, low debt, and promoters who hold a large stake in "
+        "their own company (skin in the game)."
+    ),
+    "Growth": (
+        "Fast-expanding businesses. Picks companies whose sales and profits "
+        "are growing the quickest year after year."
+    ),
+    "Value": (
+        "Cheap relative to earnings. Picks companies trading at a lower "
+        "price-to-earnings (P/E) multiple than their peers — classic bargain hunting."
+    ),
+    "Momentum": (
+        "Stocks that are already trending up. Picks stocks with the strongest "
+        "price rise over the last year (ignoring the most recent month, to "
+        "avoid chasing a short-term spike), plus a bonus for stocks that big "
+        "institutional investors (FIIs/DIIs) have recently been buying into."
+    ),
 }
 
 
