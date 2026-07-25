@@ -175,7 +175,7 @@ def run_risk_screen(
     cols = [c for c in [
         "Name", "Ticker", "Sector", "Market Cap", "P/E", "ROE", "ROCE",
         "Sales Growth", "Profit Growth", "Debt to Equity", "Piotroski score", "Promoter Holding",
-        "Beta", "StdDev_%", "Active_Risk_%", "Momentum_%"
+        "Beta", "StdDev_%", "Active_Risk_%", "Momentum_%", "Chg in FII Hold", "Chg in DII Hold",
     ] if c in final.columns]
     return final[cols].sort_values("Beta").reset_index(drop=True), benchmark_stats, missing_symbols
 
