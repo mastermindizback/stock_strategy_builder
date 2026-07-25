@@ -188,16 +188,13 @@ STYLE_DESCRIPTIONS: dict[str, str] = {
 def compute_style_rank(
     df: pd.DataFrame,
     style: str,
-    sector_neutral: bool = True,
     score_col: str = "Style_Score",
     rank_col: str = "Rank",
 ) -> pd.DataFrame:
     """
     Ranks `df` on one of the named quant styles (Low Vol / Quality / Growth
-    / Value / Momentum). Backend fixed weights only — nothing tunable is
-    exposed to the caller/UI beyond the style name and sector-neutrality
-    toggle. Missing columns (e.g. Momentum_% not yet computed) are skipped
-    with a warning rather than raising, so ranking still degrades gracefully.
+    / Value / Momentum). Backend fixed weights only. Ranks across the full
+    list of stocks (no sector grouping) — simplest, most intuitive behavior.
     """
     if style not in STYLE_FACTOR_WEIGHTS:
         raise ValueError(f"Unknown style {style!r}. Choose from: {list(STYLE_FACTOR_WEIGHTS)}")
@@ -207,13 +204,11 @@ def compute_style_rank(
         FactorSpec(column=col, weight=w, higher_is_better=hib)
         for col, (w, hib) in weights.items()
     ]
+
     missing = [f.column for f in factors if f.column not in df.columns]
     if missing:
         logger.warning("Style %r: columns unavailable and will be skipped: %s", style, missing)
 
     config = CompositeRankConfig(factors=[f for f in factors if f.column in df.columns])
-    return compute_composite_rank(
-        df, config, score_col=score_col, rank_col=rank_col, sector_neutral=sector_neutral
-    )
-
+    return compute_composite_rank(df, config, score_col=score_col, rank_col=rank_col)
 # artifact refresh: 1784455641.5617282
