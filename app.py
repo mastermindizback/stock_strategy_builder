@@ -258,6 +258,11 @@ if st.session_state.final is not None:
 
         st.divider()
         st.header("Step 3 - Rank Your Shortlist")
+        st.caption(
+            "Pick ONE strategy below. Each one ranks your shortlisted stocks by a "
+            "different investing philosophy — you don't need to understand the math, "
+            "just pick the style that matches how you want to invest."
+        )
         style_choice = st.selectbox("Pick a ranking strategy", options=["Low Vol", "Quality", "Growth", "Value", "Momentum"])
         st.caption(STYLE_DESCRIPTIONS.get(style_choice, ""))
         
@@ -273,17 +278,17 @@ if st.session_state.final is not None:
 
 if st.session_state.ranked is not None:
     ranked = st.session_state.ranked
-    st.subheader(f"Ranked shortlist - {len(ranked)} stocks")
+    st.subheader(f"Your final list — top {len(ranked)} stocks ({style_choice} strategy)")
     safe_ranked = safe_for_arrow(ranked)
     st.dataframe(safe_ranked, width="stretch")
     st.download_button(
-        "Download ranked shortlist (CSV)",
+        "Download your final list (CSV)",
         safe_ranked.to_csv(index=False).encode(),
-        "nifty750_ranked.csv",
+        "final_stock_list.csv",
         "text/csv",
     )
-    st.bar_chart(ranked.set_index("Name")["Style_Score"].head(30))
-
+    st.bar_chart(ranked.set_index("Name")["Style_Score"])
+  
 if st.session_state.fundamentals_result is None:
     st.info("Set your Screener.in session cookie and click Step 1: Run Fundamental Screen to begin.")
 
