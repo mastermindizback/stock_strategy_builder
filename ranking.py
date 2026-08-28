@@ -40,6 +40,8 @@ DEFAULT_DIRECTION = {
     "StdDev_%": False,        # lower volatility is better (used for RANKING, e.g. Low Vol style)
     "Active_Risk_%": False,   # lower tracking error vs benchmark is better (used for CAPPING, not ranking)
     "Momentum_%": True,
+    "Chg in FII Hold": True,   # rising FII stake is bullish
+    "Chg in DII Hold": True,   # rising DII stake is bullish
 }
 
 
@@ -167,32 +169,50 @@ STYLE_FACTOR_WEIGHTS: dict[str, dict[str, tuple[float, bool]]] = {
     },
     # Fama-French/Carhart UMD momentum: trailing 12-1 month price return.
     "Momentum": {
-        "Momentum_%": (1.0, True),
+        "Momentum_%": (0.40, True),        # trailing 12-1 month price momentum (core UMD factor)
+        "Chg in FII Hold": (0.30, True),   # institutional (FII) accumulation
+        "Chg in DII Hold": (0.30, True),   # institutional (DII) accumulation
     },
 }
 
 STYLE_DESCRIPTIONS: dict[str, str] = {
-    "Low Vol": "Favors stocks with lower annualised volatility and lower Beta (defensive/low-vol anomaly).",
-    "Quality": "Favors high ROE/ROCE, strong Piotroski score, low leverage, and high promoter holding.",
-    "Growth": "Favors stocks with the strongest annual sales growth and profit growth, with a profitability kicker from ROE.",
-    "Value": "Favors cheaper stocks on a P/E basis (Fama-French HML-style value tilt).",
-    "Momentum": "Favors stocks with the strongest trailing 12-1 month price momentum (Carhart UMD-style).",
+    "Low Vol": (
+        "Steady, less jumpy stocks. Picks companies whose share price moves "
+        "around less and swings less violently than the market — good if you "
+        "want fewer sleepless nights."
+    ),
+    "Quality": (
+        "Well-run, financially sound businesses. Picks companies with strong "
+        "profitability, low debt, and promoters who hold a large stake in "
+        "their own company (skin in the game)."
+    ),
+    "Growth": (
+        "Fast-expanding businesses. Picks companies whose sales and profits "
+        "are growing the quickest year after year."
+    ),
+    "Value": (
+        "Cheap relative to earnings. Picks companies trading at a lower "
+        "price-to-earnings (P/E) multiple than their peers — classic bargain hunting."
+    ),
+    "Momentum": (
+        "Stocks that are already trending up. Picks stocks with the strongest "
+        "price rise over the last year (ignoring the most recent month, to "
+        "avoid chasing a short-term spike), plus a bonus for stocks that big "
+        "institutional investors (FIIs/DIIs) have recently been buying into."
+    ),
 }
 
 
 def compute_style_rank(
     df: pd.DataFrame,
     style: str,
-    sector_neutral: bool = True,
     score_col: str = "Style_Score",
     rank_col: str = "Rank",
 ) -> pd.DataFrame:
     """
     Ranks `df` on one of the named quant styles (Low Vol / Quality / Growth
-    / Value / Momentum). Backend fixed weights only — nothing tunable is
-    exposed to the caller/UI beyond the style name and sector-neutrality
-    toggle. Missing columns (e.g. Momentum_% not yet computed) are skipped
-    with a warning rather than raising, so ranking still degrades gracefully.
+    / Value / Momentum). Backend fixed weights only. Ranks across the full
+    list of stocks (no sector grouping) — simplest, most intuitive behavior.
     """
     if style not in STYLE_FACTOR_WEIGHTS:
         raise ValueError(f"Unknown style {style!r}. Choose from: {list(STYLE_FACTOR_WEIGHTS)}")
@@ -202,13 +222,11 @@ def compute_style_rank(
         FactorSpec(column=col, weight=w, higher_is_better=hib)
         for col, (w, hib) in weights.items()
     ]
+
     missing = [f.column for f in factors if f.column not in df.columns]
     if missing:
         logger.warning("Style %r: columns unavailable and will be skipped: %s", style, missing)
 
     config = CompositeRankConfig(factors=[f for f in factors if f.column in df.columns])
-    return compute_composite_rank(
-        df, config, score_col=score_col, rank_col=rank_col, sector_neutral=sector_neutral
-    )
-
+    return compute_composite_rank(df, config, score_col=score_col, rank_col=rank_col)
 # artifact refresh: 1784455641.5617282

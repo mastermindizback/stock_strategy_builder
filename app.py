@@ -80,7 +80,7 @@ with st.sidebar:
     benchmark_label = st.selectbox(
         "Benchmark index",
         options=list(config.AVAILABLE_BENCHMARKS.keys()),
-        index=list(config.AVAILABLE_BENCHMARKS.keys()).index("NIFTY TOTAL MARKET"),
+        index=0,
         help="Beta is computed relative to whichever benchmark you pick here.",
     )
     adjust_splits = st.checkbox(
@@ -190,7 +190,7 @@ if step2_btn and st.session_state.fundamentals_result is not None:
         start_date = (datetime.date.today() - datetime.timedelta(days=400)).isoformat()
         with st.spinner(f"Fetching prices vs {benchmark_label} and computing Beta / Std Dev / Momentum via nselib..."):
             try:
-                final_df, bench_stats = run_risk_screen(
+                final_df, bench_stats, missing_syms = run_risk_screen(
                     in_universe_df, start_date, end_date,
                     beta_max=beta_max_input,
                     active_risk_max_pct=active_risk_max_input,
@@ -201,6 +201,12 @@ if step2_btn and st.session_state.fundamentals_result is not None:
                 st.session_state.final = final_df
                 st.session_state.benchmark_stats = bench_stats
                 st.session_state.ranked = None
+                st.session_state.missing_symbols = missing_syms
+                if st.session_state.get("missing_symbols"):
+                    st.warning(
+                        f"No price data found on Yahoo Finance for: {', '.join(st.session_state.missing_symbols)}. "
+                        "These stocks are excluded from Beta/StdDev/Momentum but were still fundamentally screened."
+                    )
             except Exception as exc:
                 st.error(f"Risk screen failed: {exc}")
                 st.stop()
@@ -251,36 +257,38 @@ if st.session_state.final is not None:
                 st.bar_chart(result.set_index("Name")["StdDev_%"])
 
         st.divider()
-        st.header("Step 3 - Rank by Quant Style")
-        style_choice = st.selectbox(
-            "Pick a ranking style",
-            options=["Low Vol", "Quality", "Growth", "Value", "Momentum"],
+        st.header("Step 3 - Rank Your Shortlist")
+        st.caption(
+            "Pick ONE strategy below. Each one ranks your shortlisted stocks by a "
+            "different investing philosophy — you don't need to understand the math, "
+            "just pick the style that matches how you want to invest."
         )
+        style_choice = st.selectbox("Pick a ranking strategy", options=["Low Vol", "Quality", "Growth", "Value", "Momentum"])
         st.caption(STYLE_DESCRIPTIONS.get(style_choice, ""))
-        sector_neutral_rank = st.checkbox(
-            "Rank sector-neutral (z-score within each sector)",
-            value=True,
-            disabled="Sector" not in result.columns,
+        
+        top_n = st.number_input(
+            "How many stocks do you want in your final list?",
+            min_value=1, max_value=len(result), value=min(20, len(result)), step=1,
+            help="Only your top-ranked stocks by this many will be shown/downloaded.",
         )
 
         if st.button("Compute style rank", width="stretch"):
-            st.session_state.ranked = compute_style_rank(
-                result, style_choice, sector_neutral=sector_neutral_rank
-            )
+            ranked = compute_style_rank(result, style_choice)
+            st.session_state.ranked = ranked.head(int(top_n))
 
 if st.session_state.ranked is not None:
     ranked = st.session_state.ranked
-    st.subheader(f"Ranked shortlist - {len(ranked)} stocks")
+    st.subheader(f"Your final list — top {len(ranked)} stocks ({style_choice} strategy)")
     safe_ranked = safe_for_arrow(ranked)
     st.dataframe(safe_ranked, width="stretch")
     st.download_button(
-        "Download ranked shortlist (CSV)",
+        "Download your final list (CSV)",
         safe_ranked.to_csv(index=False).encode(),
-        "nifty750_ranked.csv",
+        "final_stock_list.csv",
         "text/csv",
     )
-    st.bar_chart(ranked.set_index("Name")["Style_Score"].head(30))
-
+    st.bar_chart(ranked.set_index("Name")["Style_Score"])
+  
 if st.session_state.fundamentals_result is None:
     st.info("Set your Screener.in session cookie and click Step 1: Run Fundamental Screen to begin.")
 

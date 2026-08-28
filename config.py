@@ -36,16 +36,12 @@ TTM_TRADING_DAYS = 252
 # capital_market.index_data(index=...).
 # --------------------------------------------------------------------------
 AVAILABLE_BENCHMARKS = {
-    "NIFTY 50": "NIFTY 50",
-    "NIFTY 200": "NIFTY 200",
-    "NIFTY 500": "NIFTY 500",
-    "NIFTY TOTAL MARKET": "NIFTY TOTAL MARKET",
+    "NIFTY 50": "^NSEI",
+    "BSE SENSEX": "^BSESN",
 }
 
-# Default benchmark kept for backward compatibility with any code that
-# still imports BENCHMARK_INDEX_NAME directly; the Streamlit UI overrides
-# this at runtime via st.session_state / function args.
-BENCHMARK_INDEX_NAME = "NIFTY TOTAL MARKET"
+BENCHMARK_INDEX_NAME = "NIFTY 50"
+
 
 
 def require_screener_session() -> None:
